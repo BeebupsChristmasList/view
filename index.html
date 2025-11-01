@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beebup's Christmas List 2025</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'display': ['"Mountains of Christmas"', 'cursive'],
+                    },
+                    colors: {
+                        'festive-green': '#166534', // A deep green
+                        'festive-red': '#DC2626',   // A bright red
+                        'festive-gold': '#FBBF24',  // A warm gold
+                        'night-bg': '#111827',     // A dark blue/black
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS for Animations and Layout -->
+    <style>
+        /* NEW: Custom cursor styles */
+        body {
+            /* Hide the default cursor on desktops */
+            cursor: none;
+        }
+        .cursor-dot, .cursor-outline {
+            display: none; /* Hidden by default, shown on md: */
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: all 0.1s linear;
+        }
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 2px solid white;
+            border-radius: 50%;
+            transition: all 0.15s ease-out;
+        }
+        /* Show cursor only on non-touch devices */
+        @media (min-width: 768px) and (pointer: fine) {
+            body {
+                cursor: none;
+            }
+            .cursor-dot, .cursor-outline {
+                display: block;
+            }
+        }
+        /* Cursor grow effect */
+        .cursor-outline.grow {
+            transform: translate(-50%, -50%) scale(1.5);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* NEW: Festive text glow animation */
+        @keyframes festiveGlow {
+            0% { text-shadow: 0 0 3px rgba(255, 255, 255, 0.1); }
+            50% { text-shadow: 0 0 8px rgba(255, 255, 255, 0.4); }
+            100% { text-shadow: 0 0 3px rgba(255, 255, 255, 0.1); }
+        }
+        /* Apply glow to festive colors */
+        .text-festive-red {
+            animation: festiveGlow 2.5s infinite alternate;
+        }
+        .text-festive-gold {
+            animation: festiveGlow 2s infinite alternate;
+        }
+
+
+        /* CSS-Only Snowfall Animation */
+        .snowflake {
+            position: absolute;
+            top: -20px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(0vh) translateX(0vw); }
+            100% { transform: translateY(105vh) translateX(5vw); }
+        }
+
+        /* Hero text fade-in */
+        .hero-text {
+            animation: fadeIn 2s ease-out;
+            /* NEW: Add transition for smooth parallax scrolling */
+            transition: opacity 0.2s linear, transform 0.2s linear;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Scroll-down chevron animation */
+        .scroll-down {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* UPDATED: Scroll-reveal animation (smoother and more subtle) */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px); /* Reduced from 30px */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            /* NEW: Delay is now set by JS for stagger effect */
+            transition-delay: var(--reveal-delay, 0s);
+        }
+        .reveal-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* NEW: 3D Tilt Card effect */
+        /* Applied by JS, but 'perspective' is needed on the parent */
+        .gift-grid {
+            perspective: 1000px;
+        }
+        .gift-card {
+            /* This transition will smooth the "reset" on mouse-leave */
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            /* NEW: Added gold border for "present" feel */
+            border-top: 4px solid #FBBF24; /* festive-gold */
+        }
+        
+        /* NEW: Style for the link, to make it fill the card */
+        .gift-card-link {
+            display: block;
+            text-decoration: none;
+            /* This makes the tilt/reveal apply to the link wrapper */
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* NEW: Countdown Timer Styles */
+        #countdown-timer {
+            text-align: center;
+            margin: 4rem auto;
+            max-width: 600px;
+        }
+        #countdown-timer .countdown-title {
+            font-family: 'Mountains of Christmas', cursive;
+            font-size: 2.5rem; /* 40px */
+            color: #FBBF24; /* festive-gold */
+        }
+        .countdown-blocks {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .countdown-block {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            min-width: 80px;
+        }
+        .countdown-block span {
+            display: block;
+        }
+        .countdown-number {
+            font-size: 2.25rem; /* 36px */
+            font-weight: 700;
+            color: white;
+            line-height: 1;
+        }
+        .countdown-label {
+            font-size: 0.875rem; /* 14px */
+            color: #d1d5db; /* gray-300 */
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-night-bg font-sans text-gray-200">
+
+    <!-- NEW: Custom Cursor Elements -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <!-- Snowfall Container -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden z-0" aria-hidden="true" id="snow-container">
+        <!-- Snowflakes will be added here by JavaScript -->
+    </div>
+
+    <!-- Main Content (z-10 to be above the snow) -->
+    <div class="relative z-10">
+
+        <!-- Hero Section -->
+        <header class="min-h-screen flex flex-col items-center justify-center text-center p-4 overflow-hidden">
+            <div class="hero-text">
+                <h1 class="font-display text-7xl md:text-9xl text-white">Beebup's</h1>
+                <h2 class="font-display text-5xl md:text-7xl text-festive-red">Christmas List</h2>
+                <!-- REMOVED: "A very serious and professional wishlist." paragraph -->
+            </div>
+            <div class="scroll-down absolute bottom-10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+        </header>
+
+        <!-- 
+            REMOVED: Intro Text Block 
+        -->
+
+        <!-- 
+            NEW: Responsive Gift Grid Section
+            - Replaces both the horizontal scroll and the mobile-only list.
+            - It's a single, responsive grid for all screen sizes.
+        -->
+        <section 
+            id="gift-grid" 
+            class="gift-grid container mx-auto max-w-6xl p-4 md:p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
+        >
+            <!-- Gift items will be dynamically injected here for all devices -->
+        </section>
+
+        <!-- NEW: Christmas Countdown Timer -->
+        <section id="countdown-timer">
+            <h2 class="countdown-title text-festive-gold">Countdown to Christmas</h2>
+            <div class="countdown-blocks">
+                <div class="countdown-block">
+                    <span id="countdown-days" class="countdown-number">00</span>
+                    <span class="countdown-label">Days</span>
+                </div>
+                <div class="countdown-block">
+                    <span id="countdown-hours" class="countdown-number">00</span>
+                    <span class="countdown-label">Hours</span>
+                </div>
+                <div class="countdown-block">
+                    <span id="countdown-minutes" class="countdown-number">00</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-block">
+                    <span id="countdown-seconds" class="countdown-number">00</span>
+                    <span class="countdown-label">Seconds</span>
+                </div>
+            </div>
+            <h3 id="countdown-message" class="countdown-title text-festive-red" style="display:none; margin-top: 1rem;">Merry Christmas!</h3>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center p-8 mt-16">
+            <p class="text-gray-400">Made with <span class="text-festive-red">❤️</span> and a dash of 🎄 magic.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // ------------------------------------------------------------------
+        // 🎄🎁 ATTENTION! ADD/EDIT YOUR CHRISTMAS GIFTS HERE! 🎁🎄
+        // ------------------------------------------------------------------
+        // Just edit this list. The website will update automatically.
+        // - name: The name of the item.
+        // - price: The price (as a string).
+        // - imageUrl: The URL of the item's picture.
+        // - buyUrl: (NEW!) The link to the item's store page.
+        // ------------------------------------------------------------------
+        
+        const giftList = [
+            {
+                name: "Cozy Wool Socks",
+                price: "$25.00",
+                imageUrl: "https://placehold.co/600x400/DC2626/FFFFFF?text=Wool+Socks",
+                buyUrl: "https://www.amazon.com/" // Placeholder link
+            },
+            {
+                name: "Noise-Cancelling Headphones",
+                price: "$249.99",
+                imageUrl: "https://placehold.co/600x400/166534/FFFFFF?text=Headphones",
+                buyUrl: "https://www.amazon.com/" // Placeholder link
+            },
+            {
+                name: "A Really Good Book",
+                price: "$18.50",
+                imageUrl: "https://placehold.co/600x400/FBBF24/111827?text=A+Good+Book",
+                buyUrl: "https://www.amazon.com/" // Placeholder link
+            },
+            {
+                name: "Fancy Coffee Maker",
+                price: "$120.00",
+                imageUrl: "https://placehold.co/600x400/e2e8f0/111827?text=Coffee+Maker",
+                buyUrl: "https://www.amazon.com/" // Placeholder link
+            },
+            {
+                name: "Lego Bonsai Tree",
+                price: "$49.99",
+                imageUrl: "https://placehold.co/600x400/3B82F6/FFFFFF?text=Lego+Bonsai",
+                buyUrl: "https://www.amazon.com/" // Placeholder link
+            },
+            {
+                name: "A New Plant Friend",
+                price: "$35.00",
+                imageUrl: "https://placehold.co/600x400/10B981/FFFFFF?text=Plant",
+                buyUrl: "https://www.amazon.com/" // Placeholder link
+            },
+            {
+                name: "Another Good Book",
+                price: "$22.00",
+                imageUrl: "https://placehold.co/600x400/9333ea/FFFFFF?text=Book+2",
+                buyUrl: "https://www.amazon.com/" // Placeholder link
+            },
+            {
+                name: "Nintendo Switch Game",
+                price: "$59.99",
+                imageUrl: "https://placehold.co/600x400/ef4444/FFFFFF?text=Game",
+                buyUrl: "https://www.amazon.com/" // Placeholder link
+            }
+        ];
+
+        // --- End of easy-edit section ---
+        
+        
+        
+        // --- Core Application Logic (No need to edit below) ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const giftGrid = document.getElementById('gift-grid');
+            const snowContainer = document.getElementById('snow-container');
+            const cursorDot = document.getElementById('cursor-dot');
+            const cursorOutline = document.getElementById('cursor-outline');
+
+            // 1. Generate Gift Cards
+            function renderGifts() {
+                if (!giftGrid) return;
+                giftGrid.innerHTML = '';
+                
+                giftList.forEach(gift => {
+                    // NEW: Card HTML is now simpler and includes:
+                    // - `reveal-item` class for the scroll-reveal observer
+                    // - `data-tilt` attribute to activate the 3D tilt effect
+                    // UPDATED: The card is now wrapped in an <a> tag
+                    const cardHtml = `
+                        <a 
+                            href="${gift.buyUrl}"
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            class="gift-card-link reveal-item"
+                            data-tilt 
+                        >
+                            <div 
+                                class="gift-card bg-white rounded-lg shadow-2xl w-full overflow-hidden"
+                            >
+                                <img 
+                                    src="${gift.imageUrl}" 
+                                    alt="${gift.name}" 
+                                    class="w-full h-64 object-cover"
+                                    onerror="this.src='https://placehold.co/600x400/6b7280/FFFFFF?text=Image+Missing'; this.onerror=null;"
+                                >
+                                <div class="p-5 h-1/3 flex flex-col justify-between">
+                                    <h3 class="text-2xl font-bold text-gray-900">${gift.name}</h3>
+                                    <p class="text-xl text-festive-green font-semibold">${gift.price}</p>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                    giftGrid.insertAdjacentHTML('beforeend', cardHtml);
+                });
+
+                // After rendering, initialize new effects
+                initScrollReveal();
+                initMagneticTilt();
+                initCursorHover();
+            }
+            
+            // 2. NEW: Scroll-Reveal Effect using Intersection Observer
+            function initScrollReveal() {
+                const revealItems = document.querySelectorAll('.reveal-item');
+                
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.1 // Trigger when 10% of the item is visible
+                };
+
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target); // Stop observing once visible
+                        }
+                    });
+                }, observerOptions);
+
+                // UPDATED: Apply stagger delay *before* observing
+                revealItems.forEach((item, index) => {
+                    // This sets the --reveal-delay CSS variable for each item
+                    item.style.setProperty('--reveal-delay', `${index * 100}ms`);
+                    observer.observe(item);
+                });
+            }
+
+            // 3. NEW: 3D "Magnetic" Tilt Effect
+            function initMagneticTilt() {
+                // UPDATED: This selector now targets the <a> tag
+                const tiltItems = document.querySelectorAll('[data-tilt]');
+                
+                tiltItems.forEach(item => {
+                    item.addEventListener('mousemove', (e) => {
+                        const { clientX, clientY } = e;
+                        const { left, top, width, height } = item.getBoundingClientRect();
+                        
+                        const x = clientX - left;
+                        const y = clientY - top;
+                        
+                        const maxRotate = 15; // Max tilt in degrees
+                        
+                        // Calculate rotation: -1 to 1, then multiply by maxRotate
+                        const rotateX = (maxRotate * ((y / height) - 0.5) * 2).toFixed(2);
+                        const rotateY = (maxRotate * ((x / width) - 0.5) * -2).toFixed(2); // Invert for natural movement
+
+                        item.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+                        item.style.transition = 'transform 0.1s linear'; // Make follow smooth
+                    });
+
+                    item.addEventListener('mouseleave', () => {
+                        // Reset with the smooth CSS transition
+                        item.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+                        item.style.transition = 'transform 0.4s cubic-bezier(0.23, 1, 0.32, 1)';
+                    });
+                });
+            }
+            
+            // 4. NEW: Custom Cursor Logic
+            function initCustomCursor() {
+                window.addEventListener('mousemove', (e) => {
+                    const { clientX, clientY } = e;
+                    cursorDot.style.left = `${clientX}px`;
+                    cursorDot.style.top = `${clientY}px`;
+                    
+                    cursorOutline.style.left = `${clientX}px`;
+                    cursorOutline.style.top = `${clientY}px`;
+                });
+            }
+            
+            // 5. NEW: Cursor Hover Effect (for tilt cards)
+            function initCursorHover() {
+                // UPDATED: This selector now targets the <a> tag
+                const tiltItems = document.querySelectorAll('[data-tilt]');
+                tiltItems.forEach(item => {
+                    item.addEventListener('mouseenter', () => {
+                        cursorOutline.classList.add('grow');
+                    });
+                    item.addEventListener('mouseleave', () => {
+                        cursorOutline.classList.remove('grow');
+                    });
+                });
+            }
+
+            // 6. Create Snowflakes
+            function createSnowflakes() {
+                // ... (This function is unchanged)
+                const flakeCount = 50;
+                for (let i = 0; i < flakeCount; i++) {
+                    const flake = document.createElement('div');
+                    flake.className = 'snowflake';
+                    
+                    const size = Math.random() * 5 + 2; // 2px to 7px
+                    flake.style.width = `${size}px`;
+                    flake.style.height = `${size}px`;
+                    
+                    flake.style.left = `${Math.random() * 100}vw`;
+                    
+                    // Animation settings
+                    const duration = Math.random() * 5 + 5; // 5 to 10 seconds
+                    const delay = Math.random() * 5; // 0 to 5 seconds
+                    
+                    flake.style.animationDuration = `${duration}s`;
+                    flake.style.animationDelay = `${delay}s`;
+                    
+                    // Stagger horizontal start/end for more natural movement
+                    const horizontalDrift = (Math.random() - 0.5) * 10; // -5vw to +5vw
+                    flake.style.animationName = `fall-${i}`; // Unique animation for drift
+                    
+                    const keyframes = `
+                        @keyframes fall-${i} {
+                            0% { transform: translateY(-5vh) translateX(0vw); opacity: 0.8; }
+                            100% { transform: translateY(105vh) translateX(${horizontalDrift}vw); opacity: 0.5; }
+                        }
+                    `;
+                    
+                    // Add keyframes to a new style tag (if not already added)
+                    if (!document.getElementById(`snow-style-${i}`)) {
+                        const styleSheet = document.createElement("style");
+                        styleSheet.id = `snow-style-${i}`;
+                        styleSheet.innerText = keyframes;
+                        document.head.appendChild(styleSheet);
+                    }
+                    
+                    snowContainer.appendChild(flake);
+                }
+            }
+            
+            // 7. NEW: Parallax Hero Effect
+            function handleScroll() {
+                const heroText = document.querySelector('.hero-text');
+                const heroHeader = heroText ? heroText.closest('header') : null;
+                
+                if (heroText && heroHeader) {
+                    const scrollY = window.scrollY;
+                    const heroHeight = heroHeader.offsetHeight;
+                    
+                    // Only apply effect when scrolling down past the "fold"
+                    if (scrollY < heroHeight) {
+                        // UPDATED: Changed progress math for a full fade-out
+                        const progress = scrollY / heroHeight;
+                        
+                        heroText.style.transform = `translateY(${scrollY * 0.4}px)`;
+                        heroText.style.opacity = (1 - progress).toString();
+                    }
+                }
+            }
+
+            // 8. NEW: Christmas Countdown Timer Logic
+            function initCountdown() {
+                const daysEl = document.getElementById('countdown-days');
+                const hoursEl = document.getElementById('countdown-hours');
+                const minutesEl = document.getElementById('countdown-minutes');
+                const secondsEl = document.getElementById('countdown-seconds');
+                const timerContainer = document.getElementById('countdown-timer');
+                const messageEl = document.getElementById('countdown-message');
+                
+                // NOTE: Set to the *current* year's Christmas
+                const currentYear = new Date().getFullYear();
+                const christmasDay = new Date(`December 25, ${currentYear} 00:00:00`).getTime();
+
+                function updateCountdown() {
+                    const now = new Date().getTime();
+                    const distance = christmasDay - now;
+
+                    if (distance < 0) {
+                        // Christmas has arrived!
+                        timerContainer.style.display = 'none';
+                        messageEl.style.display = 'block';
+                        clearInterval(countdownInterval);
+                        return;
+                    }
+
+                    // Calculations
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    // Update HTML (add '0' padding for single digits)
+                    daysEl.innerText = days.toString().padStart(2, '0');
+                    hoursEl.innerText = hours.toString().padStart(2, '0');
+                    minutesEl.innerText = minutes.toString().padStart(2, '0');
+                    secondsEl.innerText = seconds.toString().padStart(2, '0');
+                }
+
+                updateCountdown(); // Run once immediately
+                const countdownInterval = setInterval(updateCountdown, 1000);
+            }
+            
+            // Run all initialization functions
+            renderGifts();
+            initCustomCursor();
+            createSnowflakes();
+            initCountdown(); // Add the countdown
+            
+            // Add the scroll listener for the parallax effect
+            window.addEventListener('scroll', handleScroll);
+        });
+    </script>
+
+</body>
+</html>
+
+
