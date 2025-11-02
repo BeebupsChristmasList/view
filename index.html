@@ -38,6 +38,11 @@
         /* Custom cursor styles */
         body {
             cursor: none;
+            /* NEW: Disable text selection */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
         .cursor-dot, .cursor-outline {
             display: none; 
@@ -234,7 +239,8 @@
         }
     </style>
 </head>
-<body class="bg-night-bg font-sans text-gray-200">
+<!-- UPDATED: Added select-none class -->
+<body class="bg-night-bg font-sans text-gray-200 select-none">
 
     <!-- Custom Cursor Elements -->
     <div class="cursor-dot" id="cursor-dot"></div>
@@ -302,7 +308,7 @@
 
         <!-- Footer -->
         <footer class="text-center p-8 mt-16">
-            <p class="text-gray-400">Made with <span class="text-festive-red">❤️</span> and a dash of 🎄 magic.</p>
+            <!-- <p class="text-gray-400">Made with <span class="text-festive-red">❤️</span> and a dash of 🎄 magic.</p> -->
         </footer>
 
     </div>
@@ -381,7 +387,7 @@
                 giftGrid.innerHTML = '';
                 
                 giftList.forEach(gift => {
-                    // UPDATED: Card HTML with responsive classes and new overlay effect
+                    // UPDATED: Card HTML simplified to remove overlay
                     const cardHtml = `
                         <a 
                             href="${gift.buyUrl}"
@@ -392,20 +398,12 @@
                             <div 
                                 class="gift-card bg-white rounded-lg shadow-2xl w-full overflow-hidden"
                             >
-                                <!-- NEW: Image wrapper for overlay -->
-                                <div class="relative">
-                                    <img 
-                                        src="${gift.imageUrl}" 
-                                        alt="${gift.name}" 
-                                        <!-- UPDATED: Responsive height -->
-                                        class="w-full h-40 sm:h-56 md:h-64 object-cover"
-                                        onerror="this.src='https://placehold.co/600x400/6b7280/FFFFFF?text=Image+Missing'; this.onerror=null;"
-                                    >
-                                    <!-- NEW: Hover overlay -->
-                                    <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center opacity-0 hover:opacity-100">
-                                        <span class="text-white text-sm font-bold border-2 border-white rounded-full px-3 py-1">View Gift</span>
-                                    </div>
-                                </div>
+                                <img 
+                                    src="${gift.imageUrl}" 
+                                    alt="${gift.name}" 
+                                    class="w-full h-40 sm:h-56 md:h-64 object-cover"
+                                    onerror="this.src='https://placehold.co/600x400/6b7280/FFFFFF?text=Image+Missing'; this.onerror=null;"
+                                >
                                 <!-- UPDATED: Responsive padding and text sizes -->
                                 <div class="p-3 sm:p-5 h-1/3 flex flex-col justify-between">
                                     <h3 class="text-base sm:text-xl md:text-2xl font-bold text-gray-900">${gift.name}</h3>
@@ -589,4 +587,5 @@
 
 </body>
 </html>
+
 
