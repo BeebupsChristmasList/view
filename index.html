@@ -195,6 +195,72 @@
             margin-top: 0.25rem;
             sm:font-size: 0.875rem; /* 14px */
         }
+
+        /* NEW: Calculator Styles */
+        /* Basic styles for inputs and selects in the calculator */
+        .calculator-input {
+            background-color: #374151; /* gray-700 */
+            border: 1px solid #4B5563; /* gray-600 */
+            color: white;
+            border-radius: 0.375rem; /* rounded-md */
+            padding: 0.5rem 0.75rem;
+            width: 100%;
+            margin-top: 0.25rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .calculator-input:focus {
+            outline: none;
+            border-color: #FBBF24; /* festive-gold */
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.3);
+        }
+        /* Fix for select arrow in dark mode */
+        .calculator-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding-right: 2.5rem;
+        }
+        .calculator-btn {
+            display: inline-block;
+            background-color: #166534; /* festive-green */
+            color: white;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* rounded-md */
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+        .calculator-btn:hover {
+            background-color: #15803d; /* darker green */
+        }
+        .calculator-btn-red {
+            background-color: #DC2626; /* festive-red */
+            font-weight: 700;
+            color: white;
+            border-radius: 9999px; /* rounded-full */
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem; /* text-xs */
+            line-height: 1;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        .calculator-btn-red:hover {
+            background-color: #b91c1c; /* darker red */
+        }
         
     </style>
 </head>
@@ -241,6 +307,90 @@
         >
             <!-- Gift items will be dynamically injected here for all devices -->
         </section>
+
+        <!-- ========================================================== -->
+        <!-- NEW: Gift Calculator Section -->
+        <!-- ========================================================== -->
+        <section id="gift-calculator" class="container mx-auto max-w-6xl p-4 md:p-8">
+            <h2 class="font-display text-4xl sm:text-5xl text-festive-gold text-center mb-8">
+                Gift Calculator
+            </h2>
+            
+            <div class="max-w-4xl mx-auto bg-gray-900/50 backdrop-blur-sm rounded-lg shadow-2xl p-6 md:p-8 border border-gray-700">
+                <div class="md:grid md:grid-cols-2 md:gap-8">
+                    
+                    <!-- Column 1: Add Items -->
+                    <div class="space-y-6">
+                        <!-- Form 1: Add from List -->
+                        <div class_A="bg-gray-800 p-4 rounded-lg shadow-inner">
+                            <label for="existing-gift-select" class="block text-lg font-semibold text-white mb-2">
+                                Add from Beebup's List
+                            </label>
+                            <select id="existing-gift-select" class="calculator-input calculator-select">
+                                <option value="">Select a gift...</option>
+                                <!-- Options will be populated by JS -->
+                            </select>
+                            <button id="add-existing-btn" class="calculator-btn">
+                                Add to Cart
+                            </button>
+                        </div>
+                        
+                        <!-- Form 2: Add Custom Item -->
+                        <div class="bg-gray-800 p-4 rounded-lg shadow-inner">
+                            <h3 class="text-lg font-semibold text-white mb-2">
+                                Add Custom Item
+                            </h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label for="custom-gift-name" class="block text-sm font-medium text-gray-300">
+                                        Item Name
+                                    </label>
+                                    <input type="text" id="custom-gift-name" class="calculator-input" placeholder="e.g., Fancy Socks">
+                                </div>
+                                <div>
+                                    <label for="custom-gift-price" class="block text-sm font-medium text-gray-300">
+                                        Price ($)
+                                    </label>
+                                    <input type="number" id="custom-gift-price" class="calculator-input" placeholder="e.g., 19.99" min="0" step="0.01">
+                                </div>
+                                <button id="add-custom-btn" class="calculator-btn">
+                                    Add Custom Item
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Column 2: Cart and Total -->
+                    <div class="mt-8 md:mt-0 bg-gray-800 p-4 rounded-lg shadow-inner">
+                        <h3 class="text-2xl font-bold text-white mb-4">Your Cart</h3>
+                        
+                        <!-- Cart List -->
+                        <ul id="calculator-list" class="space-y-2 h-48 overflow-y-auto pr-2">
+                            <!-- Cart items will be populated by JS -->
+                            <!-- Example:
+                            <li class="flex justify-between items-center bg-gray-700 p-2 rounded">
+                                <span class="text-gray-200">Stream Deck Mini</span>
+                                <span class="font-semibold text-white">$57.99</span>
+                                <button class="calculator-btn-red">&times;</button>
+                            </li>
+                            -->
+                        </ul>
+                        
+                        <div class="border-t border-gray-600 mt-4 pt-4">
+                            <h4 class="text-lg font-semibold text-gray-300 uppercase">Total Cost</h4>
+                            <p id="calculator-total" class="text-4xl font-bold text-festive-gold mt-1">
+                                $0.00
+                            </p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+        <!-- ========================================================== -->
+        <!-- END: Gift Calculator Section -->
+        <!-- ========================================================== -->
+
 
         <!-- Christmas Countdown Timer -->
         <section id="countdown-timer">
@@ -294,13 +444,13 @@
                 name: "Stream Deck Mini",
                 price: "$57.99",
                 imageUrl: "https://m.media-amazon.com/images/I/61w+a4IDpsL._AC_SX679_.jpg",
-                buyUrl: "https://www.amazon.com/Elgato-Stream-Deck-Mini-customizable/dp/B07DYRS1WH/ref=sr_1_3?crid=291JDZO5OSXUE&dib=eyJ2IjoiMSJ9.sO3yMvmKJpAh2MIAFKbXxqShKupox8EHmver9cmgDoDJ8wMcxKSCmatvv3Y1iL4HqhiFHKLXAy1O5htauPATDrIjdCUY1vx3kVomxicC-lk4xD2KGfOc8oC_n_q2k4m6XfuzfW0kz74kUVvhLxQK1oOLNlK4TMLBRMWzj-ut-e2JjG-vwNrr923S70oQ6guugN_azepMPWNh7e_mxvYQcSXN1Sr2G94qMDz9G8CYCEI.lEovS6Rv6YGQZxGK53KASpoCGg4_6xe5ghorUsg3PoA&dib_tag=se&keywords=stream+deck+mini&qid=1762126248&sprefix=stream+deck+mini%2Caps%2C154&sr=8-3" // Placeholder link
+                buyUrl: "https://www.amazon.com/Elgato-Stream-Deck-Mini-customizable/dp/B07DYRS1WH/ref=sr_1_3?crid=291JDZO5OSXUE&dib=eyJ2IjoiMSJ9.sO3yMvmKJlAh2MIAFKbXxqShKupox8EHmver9cmgDoDJ8wMcxKSCmatvv3Y1iL4HqhiFHKLXAy1O5htauPATDrIjdCUY1vx3kVomxicC-lk4xD2KGfOc8oC_n_q2k4m6XfuzfW0kz74kUVvhLxQK1oOLNlK4TMLBRMWzj-ut-e2JjG-vwNrr923S70oQ6guugN_azepMPWNh7e_mxvYQcSXN1Sr2G94qMDz9G8CYCEI.lEovS6Rv6YGQZxGK53KASpoCGg4_6xe5ghorUsg3PoA&dib_tag=se&keywords=stream+deck+mini&qid=1762126248&sprefix=stream+deck+mini%2Caps%2C154&sr=8-3" // Placeholder link
             },
             {
                 name: "RGB Tube Light with Desk Tripod",
                 price: "$62.29",
                 imageUrl: "https://m.media-amazon.com/images/I/61E-mjbY+bL._AC_SX679_.jpg",
-                buyUrl: "https://www.amazon.com/Magnetic-Handheld-Photography-2500K-8500K-Dimmable/dp/B0DXFFFQ4H/ref=sr_1_4?crid=2F53BJ0YQNCFG&dib=eyJ2IjoiMSJ9.KAcFSVz4ZuI7JcnZxEHcFkUjvlaYnnYkstCNptBI5ULUjza8YjeZtExGLE1BjWW8R7m20b_J7jjSa60vptFUQBy0mihq66CdaIUSo9X05VZg_PpfGRRakZXy92gUUJiBV3bHYXN1Bl6swYTXx7u88uF72999yaeCs2AFFYbq4RdixsstxqnPhdTQdSqhsqL0-DuJkRWpLAEiRcU97xcyqhDYzbawme0MyOn9FS2wI2I.D_rJKYuNxlzizU-5JxXZx9e9h23Lml7gfQNIS51Wd38&dib_tag=se&keywords=rgb%2Btube%2Blight&qid=1762126409&sprefix=rgb%2Btube%2Blight%2Caps%2C158&sr=8-4&th=1" // Placeholder link
+                buyUrl: "https://www.amazon.com/Magnetic-Handheld-Photography-2500K-8500K-Dimmable/dp/B0DXFFFQ4H/ref=sr_1_4?crid=2F53BJ0YQNCFG&dib=eyJ2IjoiMSJ9.KAcFSVz4ZuI7JcnZxEHcFkUjvlaYnnYkstCNptBI5ULUjzaYjeZtExGLE1BjWW8R7m20b_J7jjSa60vptFUQBy0mihq66CdaIUSo9X05VZg_PpfGRRakZXy92gUUJiBV3bHYXN1Bl6swYTXx7u88uF72999yaeCs2AFFYbq4RdixsstxqnPhdTQdSqhsqL0-DuJkRWpLAEiRcU97xcyqhDYzbawme0MyOn9FS2wI2I.D_rJKYuNxlzizU-5JxXZx9e9h23Lml7gfQNIS51Wd38&dib_tag=se&keywords=rgb%2Btube%2Blight&qid=1762126409&sprefix=rgb%2Btube%2Blight%2Caps%2C158&sr=8-4&th=1" // Placeholder link
             },
             {
                 name: "Ridge Tracker Card (For my wallet)",
@@ -350,6 +500,27 @@
             const snowContainer = document.getElementById('snow-container');
             const cursorDot = document.getElementById('cursor-dot');
             const cursorOutline = document.getElementById('cursor-outline');
+
+            // --- NEW: Calculator State & Helper Functions ---
+            let calculatorCart = []; // Holds items as { name, price }
+
+            // Helper to parse price strings like "$1,234.56" or "$???" into numbers
+            function parsePrice(priceString) {
+                if (typeof priceString !== 'string') return 0;
+                const cleaned = priceString.replace(/[$,]/g, '');
+                const price = parseFloat(cleaned);
+                return isNaN(price) ? 0 : price;
+            }
+
+            // Helper to format numbers into currency
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(amount);
+            }
+            // --- End of New Helpers ---
+
 
             // 1. Generate Gift Cards
             function renderGifts() {
@@ -584,13 +755,131 @@
                 // only on the *first* time the user clicks the overlay.
                 overlay.addEventListener('click', enterWonderland, { once: true });
             }
+
+            // 9. NEW: Gift Calculator Logic
+            function initGiftCalculator() {
+                // Get all calculator elements
+                const selectEl = document.getElementById('existing-gift-select');
+                const addExistingBtn = document.getElementById('add-existing-btn');
+                const customNameEl = document.getElementById('custom-gift-name');
+                const customPriceEl = document.getElementById('custom-gift-price');
+                const addCustomBtn = document.getElementById('add-custom-btn');
+                const cartListEl = document.getElementById('calculator-list');
+                const totalEl = document.getElementById('calculator-total');
+
+                // --- 9a. Populate Select Dropdown ---
+                function populateGiftSelect() {
+                    if (!selectEl) return;
+                    giftList.forEach((gift, index) => {
+                        const price = parsePrice(gift.price);
+                        // Only add items that have a valid price
+                        if (price > 0) {
+                            const option = document.createElement('option');
+                            option.value = index.toString();
+                            option.textContent = `${gift.name} (${formatCurrency(price)})`;
+                            selectEl.appendChild(option);
+                        }
+                    });
+                }
+
+                // --- 9b. Render Cart and Total ---
+                function renderCalculator() {
+                    if (!cartListEl || !totalEl) return;
+                    
+                    // Clear current list
+                    cartListEl.innerHTML = '';
+                    
+                    let currentTotal = 0;
+                    
+                    // Re-render list
+                    if (calculatorCart.length === 0) {
+                        cartListEl.innerHTML = `<li class="text-gray-400 text-center italic">Your cart is empty</li>`;
+                    } else {
+                        calculatorCart.forEach((item, index) => {
+                            const li = document.createElement('li');
+                            li.className = 'flex justify-between items-center bg-gray-700 p-2 rounded';
+                            li.innerHTML = `
+                                <span class="text-gray-200 pr-2 truncate" title="${item.name}">${item.name}</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-semibold text-white flex-shrink-0">${formatCurrency(item.price)}</span>
+                                    <button class="calculator-btn-red remove-item-btn" data-index="${index}" title="Remove item">&times;</button>
+                                </div>
+                            `;
+                            cartListEl.appendChild(li);
+                            currentTotal += item.price;
+                        });
+                    }
+                    
+                    // Update total
+                    totalEl.textContent = formatCurrency(currentTotal);
+                }
+
+                // --- 9c. Add Event Listeners ---
+                
+                // Add from existing list
+                if (addExistingBtn) {
+                    addExistingBtn.addEventListener('click', () => {
+                        const selectedIndex = selectEl.value;
+                        if (selectedIndex === "") return; // No item selected
+                        
+                        const selectedGift = giftList[parseInt(selectedIndex)];
+                        if (selectedGift) {
+                            calculatorCart.push({
+                                name: selectedGift.name,
+                                price: parsePrice(selectedGift.price)
+                            });
+                            renderCalculator();
+                            selectEl.value = ""; // Reset dropdown
+                        }
+                    });
+                }
+                
+                // Add from custom fields
+                if (addCustomBtn) {
+                    addCustomBtn.addEventListener('click', () => {
+                        const name = customNameEl.value.trim();
+                        const price = parseFloat(customPriceEl.value);
+                        
+                        if (name && !isNaN(price) && price > 0) {
+                            calculatorCart.push({
+                                name: name,
+                                price: price
+                            });
+                            renderCalculator();
+                            // Clear inputs
+                            customNameEl.value = '';
+                            customPriceEl.value = '';
+                        } else {
+                            // Simple feedback, you could make this a modal
+                            if (!name) customNameEl.focus();
+                            if (isNaN(price) || price <= 0) customPriceEl.focus();
+                        }
+                    });
+                }
+                
+                // Remove from cart (using event delegation)
+                if (cartListEl) {
+                    cartListEl.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('remove-item-btn')) {
+                            const indexToRemove = parseInt(e.target.dataset.index);
+                            calculatorCart.splice(indexToRemove, 1); // Remove item from array
+                            renderCalculator(); // Re-render the list and total
+                        }
+                    });
+                }
+
+                // --- 9d. Initial Load ---
+                populateGiftSelect();
+                renderCalculator();
+            }
             
             // Run all initialization functions
             renderGifts();
             initCustomCursor();
             createSnowflakes();
             initCountdown();
-            initWonderland(); // NEW (replaces initAutoplayMusic)
+            initWonderland(); 
+            initGiftCalculator(); // NEW: Initialize the calculator
             
             // Add the scroll listener
             window.addEventListener('scroll', handleScroll);
