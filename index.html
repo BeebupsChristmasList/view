@@ -597,7 +597,8 @@
             const cursorOutline = document.getElementById('cursor-outline');
 
             // --- NEW: Calculator State & Helper Functions ---
-            let calculatorCart = []; // Holds items as { name, price }
+            const CART_STORAGE_KEY = 'beebupsCalculatorCart'; // Key for localStorage
+            let calculatorCart = JSON.parse(localStorage.getItem(CART_STORAGE_KEY) || '[]'); // Load saved cart
 
             // Helper to parse price strings like "$1,234.56" or "$???" into numbers
             function parsePrice(priceString) {
@@ -613,6 +614,11 @@
                     style: 'currency',
                     currency: 'USD'
                 }).format(amount);
+            }
+
+            // --- NEW: Save cart to localStorage ---
+            function saveCart() {
+                localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(calculatorCart));
             }
             // --- End of New Helpers ---
 
@@ -946,6 +952,7 @@
                             });
                             renderCalculator();
                             selectEl.value = ""; // Reset dropdown
+                            saveCart(); // NEW: Save cart
                         }
                     });
                 }
@@ -965,6 +972,7 @@
                             // Clear inputs
                             customNameEl.value = '';
                             customPriceEl.value = '';
+                            saveCart(); // NEW: Save cart
                         } else {
                             // Simple feedback, you could make this a modal
                             if (!name) customNameEl.focus();
@@ -980,6 +988,7 @@
                             const indexToRemove = parseInt(e.target.dataset.index);
                             calculatorCart.splice(indexToRemove, 1); // Remove item from array
                             renderCalculator(); // Re-render the list and total
+                            saveCart(); // NEW: Save cart
                         }
                     });
                 }
@@ -1047,3 +1056,4 @@
 
 </body>
 </html>
+
